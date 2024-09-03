@@ -1,0 +1,15 @@
+section.TodoList-container {
+    display       : flex;
+    flex-direction: row;
+    flex-wrap     : wrap;
+    margin-top: 20px;
+    gap: 15px;
+}
+
+li.TodoItem {
+      display        : flex;
+    margin         : 12px;
+    gap            : 15px;
+    justify-content: space-between;
+    width          : 89%;
+}

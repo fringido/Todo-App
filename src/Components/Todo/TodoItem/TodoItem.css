@@ -1,0 +1,51 @@
+.item-container {
+    border-radius: 22px;
+    background   : #202124;
+    box-shadow   : 2px 6px 12px #18191b,
+        -5px -7px 6px #28292d;
+    display        : flex;
+    flex-direction : column;
+    flex-wrap      : nowrap;
+    align-items    : center;
+    width          : 300px;
+    justify-content: space-around;
+}
+
+p {
+    margin: 0;
+}
+
+p.TodoItem-p.false {
+    color    : #fffb00;
+    font-size: xx-large;
+}
+
+p.TodoItem-p.TodoItem-p--complete {
+    color    : #00ff2a;
+    font-size: xx-large;
+}
+
+button.TodoItem-button {
+    border: none;
+}
+
+svg.icon-pause {
+    border-radius: 150px;
+    background   : #202124;
+    box-shadow   : 6px 6px 12px #18191b, -6px -6px 12px #28292d;
+    padding      : 10px;
+}
+
+svg.icon-play {
+    border-radius: 150px;
+    background   : #202124;
+    box-shadow   : inset 6px 6px 12px #18191b,
+        inset -6px -6px 12px #28292d;
+    padding: 10px;
+}
+
+span.TodoItem-time {
+    /* CONTAIN-INTRINSIC-BLOCK-SIZE: AUTO 100PX; */
+    color    : #fff;
+    font-size: xx-large;
+}
