@@ -68,4 +68,8 @@ button.button-short{
 .no_result {
     color    : #fff;
     font-size: xx-large;
+} 
+
+.card{
+    margin: 20px;
 }

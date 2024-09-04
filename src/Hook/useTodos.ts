@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocalStorage } from './useLocalStorage';
+import { generarTareasAleatorias } from './useGenerateDate';
 
 interface Todo {
     id: number;
@@ -52,6 +53,13 @@ function useTodos() {
     const completedTodos = todos.filter((todo) => !!todo.completed).length;
     const totalTodos = todos.length;
 
+    useEffect(() => {
+        if (todos.length === 0) {
+            const tareasAleatorias = generarTareasAleatorias();
+            saveTodos(tareasAleatorias);
+        }
+    }, [todos, saveTodos]); // Ejecutar solo si todos cambia
+
     const applyFilters = (todos: Todo[]): Todo[] => {
         let filteredTodos = todos;
 
@@ -76,6 +84,9 @@ function useTodos() {
                     (todo) => todo.time.hours > 1 || (todo.time.hours === 1 && todo.time.minutes > 0)
                 );
                 break;
+            case 'all': // Cambia esta lógica para mostrar solo tareas no completadas
+                filteredTodos = filteredTodos.filter((todo) => !todo.completed);
+                break;
             default:
                 break;
         }
@@ -86,7 +97,10 @@ function useTodos() {
             );
         }
 
-        return filteredTodos;
+     
+
+        // Invertir el orden del array
+        return filteredTodos.reverse();
     };
 
     const searchedTodos = applyFilters(todos);

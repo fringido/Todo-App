@@ -11,6 +11,7 @@ import { TodoItem } from "./Components/Todo/TodoItem/TodoItem";
 import { CreateTodoButton } from "./Components/Buttons/CreateTodoButton/CreateTodoButton";
 import { TodoForm } from "./Components/Modal/Form/TodoForm";
 import { TabButton } from "./Components/Buttons/TabButton/TabButton";
+import TodoChart from "./Components/Todo/TodoChart/TodoChart";
 
 function App() {
   const [vista, setVista] = React.useState(true);
@@ -61,6 +62,7 @@ function App() {
     setTodoToEdit(null); // Resetea el estado de edición
     setOpenModal(false); // Cierra el modal
   };
+
   const handleReset = (id) => {
     resetTodoTime(id);
     window.location.reload();
@@ -74,7 +76,7 @@ function App() {
         loading={loading}
       />
       <button onClick={() => setVista(!vista)}>
-        <TabButton vista={vista}/>
+        <TabButton vista={vista} />
       </button>
       {vista ? (
         <CreateTodoButton
@@ -169,7 +171,7 @@ function App() {
           )}
         </div>
       ) : (
-        <TodosLoading />
+        <TodoChart todos={searchedTodos} />
       )}
     </React.Fragment>
   );
