@@ -1,0 +1,23 @@
+.input-form {
+    color           : #fff;
+    font-size       : 0.9rem;
+    background-color: transparent;
+    /* width        : 100%; */
+    box-sizing      : border-box;
+    padding-inline  : 0.5em;
+    font-size       : x-large;
+    padding-block   : 0.7em;
+    border-radius   : 9px;
+    text-align: center;
+    /* border       : none; */
+    /* border-bottom: var(--border-height) solid var(--border-before-color); */
+    box-shadow      : 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.TimeInput {
+    color          : #fff;
+    font-size   : xx-large;
+    display        : flex;
+    background     : none;
+    justify-content: space-evenly;
+    align-items    : center;
+}

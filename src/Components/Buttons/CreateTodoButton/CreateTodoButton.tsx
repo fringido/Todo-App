@@ -1,5 +1,5 @@
 import React from "react";
-
+import './CreateTodoButton.css'
 interface CreateTodoButtonProps {
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>; // Función de actualización de estado
 }
@@ -12,8 +12,8 @@ const CreateTodoButton: React.FC<CreateTodoButtonProps> = ({
   };
 
   return (
-    <button className="CreateTodoButton" onClick={onClickButton}>
-      +
+    <button className="add" onClick={onClickButton}>
+      Crear 
     </button>
   );
 };

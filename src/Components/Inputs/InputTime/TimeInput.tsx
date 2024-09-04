@@ -1,5 +1,5 @@
 import React from "react";
-
+import './TimeInput.css'
 interface TimeInputProps {
   value: { hours: number; minutes: number };
   onChange: (value: { hours: number; minutes: number }) => void;
@@ -25,7 +25,7 @@ const TimeInput: React.FC<TimeInputProps> = ({ value, onChange }) => {
         value={value.hours}
         onChange={handleHoursChange}
         placeholder="Horas"
-        className="TimeInput-field"
+        className="input-form "
       />
       <span>:</span>
       <input
@@ -35,7 +35,7 @@ const TimeInput: React.FC<TimeInputProps> = ({ value, onChange }) => {
         value={value.minutes}
         onChange={handleMinutesChange}
         placeholder="Minutos"
-        className="TimeInput-field"
+        className="input-form "
       />
     </div>
   );

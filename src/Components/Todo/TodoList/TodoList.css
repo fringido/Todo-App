@@ -7,9 +7,10 @@ section.TodoList-container {
 }
 
 li.TodoItem {
-      display        : flex;
+    display        : flex;
     margin         : 12px;
     gap            : 15px;
     justify-content: space-between;
     width          : 89%;
+    align-items    : flex-start;
 }

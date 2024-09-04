@@ -1,0 +1,71 @@
+button{
+    border: none;
+}
+
+.filters {
+    display        : flex;
+    flex-direction : row;
+    align-content  : center;
+    justify-content: flex-start;
+    gap            : 15px;
+    flex-wrap      : wrap;
+}
+.tittle-filter {
+    font-size: xx-large;
+    color    : #fff;
+    margin: 10px;
+}
+button.button-compleat {
+    border-radius: 36px;
+    background   : #37b05b;
+    box-shadow   : 3px 2px 1px #213a29, -3px -1px 4px #006a20;
+    margin-top   : 10px;
+    color        : aliceblue;
+    font-size    : medium;
+    cursor       : pointer;
+}
+
+button.button-long {
+    border-radius: 36px;
+    background   : #b03737;
+    box-shadow   : 3px 2px 1px #3a2121, -3px -1px 4px #6a4500d4;
+    margin-top   : 10px;
+    color        : aliceblue;
+    font-size    : medium;
+    cursor       : pointer;
+    padding      : 10px;
+}
+
+button.button-medium {
+    border-radius: 36px;
+    background   : #b06737;
+    box-shadow   : 3px 2px 1px #3a2121, -3px -1px 4px #6a4500d4;
+    margin-top   : 10px;
+    color        : aliceblue;
+    font-size    : medium;
+    cursor       : pointer;
+    padding      : 10px;
+}
+
+button.button-short{
+    border-radius: 36px;
+    background   : #a2b037;
+    box-shadow   : 3px 2px 1px #3a3821, -3px -1px 4px #536a00d4;
+    margin-top   : 10px;
+    color        : aliceblue;
+    font-size    : medium;
+    cursor       : pointer;
+    padding      : 10px;
+}
+.button-compleat.active,
+.button-short.active,
+.button-long.active,
+.button-medium.active {
+    background-color: #d9e2e3;
+    /* Cambia el color de fondo */
+    color           : black;
+}
+.no_result {
+    color    : #fff;
+    font-size: xx-large;
+}

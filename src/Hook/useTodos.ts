@@ -3,31 +3,37 @@ import { useLocalStorage } from './useLocalStorage';
 
 interface Todo {
     id: number;
-    text: string; // Texto de la tarea
-    completed: boolean; // Estado de completitud de la tarea
-    time: { hours: number; minutes: number }; // Tiempo restante de la tarea
-    date: Date; // Fecha de creación de la tarea
+    text: string;
+    completed: boolean;
+    time: { hours: number; minutes: number };
+    timeReset: { hours: number; minutes: number };
+    date: Date;
     pausa: boolean;
 }
 
 interface UseTodosState {
-    loading: boolean; // Indica si los datos están cargando
-    error: boolean; // Indica si hubo un error
-    totalTodos: number; // Número total de tareas
-    completedTodos: number; // Número de tareas completadas
-    searchValue: string; // Valor de búsqueda actual
-    searchedTodos: Todo[]; // Lista de tareas buscadas
-    openModal: boolean; // Estado del modal (abierto/cerrado)
+    loading: boolean;
+    error: boolean;
+    totalTodos: number;
+    completedTodos: number;
+    searchValue: string;
+    searchedTodos: Todo[];
+    openModal: boolean;
+    filter: 'all' | 'completed' | 'short' | 'medium' | 'long'; // Filtros actualizados
 }
 
 interface UseTodosStateUpdaters {
-    setSearchValue: (value: string) => void; // Función para actualizar el valor de búsqueda
-    addTodo: (text: string, time: { hours: number; minutes: number }) => void; // Función para añadir una nueva tarea
-    completeTodo: (text: string) => void; // Función para marcar una tarea como completada
-    deleteTodo: (id: number) => void; // Función para eliminar una tarea
-    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>; // Función para actualizar el estado del modal
-    sincronizeTodos: () => void; // Función para sincronizar tareas
-    pauseTodo : (id: number) => void;
+    setSearchValue: (value: string) => void;
+    addTodo: (text: string, time: { hours: number; minutes: number }) => void;
+    completeTodo: (id: number) => void;
+    deleteTodo: (id: number) => void;
+    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+    sincronizeTodos: () => void;
+    pauseTodo: (id: number) => void;
+    setFilter: (filter: 'all' | 'completed' | 'short' | 'medium' | 'long') => void; // Filtros actualizados
+    editTodo: (id: number, newText: string, newTime: { hours: number; minutes: number }) => void;
+    actualizarTodo: (id: number, time: { hours: number; minutes: number }) => void;
+    resetTodoTime: (id: number) => void;
 }
 
 function useTodos() {
@@ -39,26 +45,52 @@ function useTodos() {
         error,
     } = useLocalStorage<Todo[]>('TODOS_V1', []);
 
-    const [searchValue, setSearchValue] = React.useState<string>(''); // Estado de valor de búsqueda
-    const [openModal, setOpenModal] = React.useState<boolean>(false); // Estado del modal
+    const [searchValue, setSearchValue] = React.useState<string>('');
+    const [openModal, setOpenModal] = React.useState<boolean>(false);
+    const [filter, setFilter] = React.useState<'all' | 'completed' | 'short' | 'medium' | 'long'>('all');
 
-    const completedTodos = todos.filter((todo) => !!todo.completed).length; // Número de tareas completadas
-    const totalTodos = todos.length; // Número total de tareas
+    const completedTodos = todos.filter((todo) => !!todo.completed).length;
+    const totalTodos = todos.length;
 
-    let searchedTodos: Todo[] = []; // Lista de tareas buscadas
+    const applyFilters = (todos: Todo[]): Todo[] => {
+        let filteredTodos = todos;
 
-    if (searchValue.length === 0) {
-        searchedTodos = todos;
-    } else {
-        searchedTodos = todos.filter((todo) => {
-            const todoText = todo.text.toLowerCase();
-            const searchText = searchValue.toLowerCase();
-            return todoText.includes(searchText);
-        });
-    }
+        switch (filter) {
+            case 'completed':
+                filteredTodos = filteredTodos.filter((todo) => todo.completed);
+                break;
+            case 'short':
+                filteredTodos = filteredTodos.filter(
+                    (todo) => todo.time.hours === 0 && todo.time.minutes <= 30
+                );
+                break;
+            case 'medium':
+                filteredTodos = filteredTodos.filter(
+                    (todo) => (todo.time.hours === 0 && todo.time.minutes > 30 && todo.time.minutes <= 60) ||
+                        (todo.time.hours === 1 && todo.time.minutes === 0)
+                );
+                break;
+            case 'long':
+                filteredTodos = filteredTodos.filter(
+                    (todo) => todo.time.hours > 1 || (todo.time.hours === 1 && todo.time.minutes > 0)
+                );
+                break;
+            default:
+                break;
+        }
+
+        if (searchValue.length > 0) {
+            filteredTodos = filteredTodos.filter((todo) =>
+                todo.text.toLowerCase().includes(searchValue.toLowerCase())
+            );
+        }
+
+        return filteredTodos;
+    };
+
+    const searchedTodos = applyFilters(todos);
 
     const addTodo = (text: string, time: { hours: number; minutes: number }) => {
-        // Función para añadir una nueva tarea
         const newTodos = [...todos];
         newTodos.push({
             id: newTodos.length + 1,
@@ -66,21 +98,41 @@ function useTodos() {
             text,
             date: new Date(),
             time,
+            timeReset: time, // Inicializa el tiempo de restablecimiento
             pausa: false,
         });
         saveTodos(newTodos);
     };
 
-    const completeTodo = (text: string) => {
-        // Función para marcar una tarea como completada
-        const todoIndex = todos.findIndex((todo) => todo.text === text);
-        const newTodos = [...todos];
-        newTodos[todoIndex].completed = !newTodos[todoIndex].completed;
-        saveTodos(newTodos);
+    const completeTodo = (id: number) => {
+        const todoIndex = todos.findIndex((todo) => todo.id === id);
+        if (todoIndex !== -1) {
+            const newTodos = [...todos];
+            newTodos[todoIndex].completed = !newTodos[todoIndex].completed;
+            saveTodos(newTodos);
+        }
+    };
+
+    const actualizarTodo = (id: number, time: { hours: number; minutes: number }) => {
+        const todoIndex = todos.findIndex((todo) => todo.id === id);
+        if (todoIndex !== -1) {
+            const newTodos = [...todos];
+            newTodos[todoIndex].time = time;
+            saveTodos(newTodos);
+        }
+    };
+
+    const resetTodoTime = (id: number) => {
+        const todoIndex = todos.findIndex((todo) => todo.id === id);
+        if (todoIndex !== -1) {
+            const newTodos = [...todos];
+            const todo = newTodos[todoIndex];
+            newTodos[todoIndex].time = todo.timeReset; // Restablece al tiempo original
+            saveTodos(newTodos);
+        }
     };
 
     const deleteTodo = (id: number) => {
-        // Función para eliminar una tarea
         const todoIndex = todos.findIndex((todo) => todo.id === id);
         const newTodos = [...todos];
         newTodos.splice(todoIndex, 1);
@@ -88,15 +140,24 @@ function useTodos() {
     };
 
     const pauseTodo = (id: number) => {
-        // Función para pausar una tarea
         const todoIndex = todos.findIndex((todo) => todo.id === id);
         const newTodos = [...todos];
         newTodos[todoIndex].pausa = !newTodos[todoIndex].pausa;
         saveTodos(newTodos);
     };
 
-    
-
+    const editTodo = (id: number, newText: string, newTime: { hours: number; minutes: number }) => {
+        const todoIndex = todos.findIndex((todo) => todo.id === id);
+        if (todoIndex !== -1) {
+            const newTodos = [...todos];
+            newTodos[todoIndex] = {
+                ...newTodos[todoIndex],
+                text: newText,
+                time: newTime,
+            };
+            saveTodos(newTodos);
+        }
+    };
 
     const state: UseTodosState = {
         loading,
@@ -106,6 +167,7 @@ function useTodos() {
         searchValue,
         searchedTodos,
         openModal,
+        filter,
     };
 
     const stateUpdaters: UseTodosStateUpdaters = {
@@ -115,7 +177,11 @@ function useTodos() {
         deleteTodo,
         setOpenModal,
         pauseTodo,
+        actualizarTodo,
         sincronizeTodos,
+        setFilter,
+        editTodo,
+        resetTodoTime, // Añadir la función para restablecer el tiempo
     };
 
     return { state, stateUpdaters };

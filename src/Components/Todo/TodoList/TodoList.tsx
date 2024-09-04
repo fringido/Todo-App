@@ -33,6 +33,7 @@ const TodoList: React.FC<TodoListProps> = (props) => {
         props.onEmptySearchResults(props.searchText)}
 
       {!props.loading && !props.error && props.searchedTodos.map(renderFunc!)}
+      
     </section>
   );
 };
