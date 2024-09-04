@@ -18,6 +18,8 @@ interface Todo {
   id: number;
   text: string;
   time: { hours: number; minutes: number };
+      timeReset: { hours: number; minutes: number }; // Tiempo original para restablecer
+
   completed: boolean;
   pausa: boolean;
 }
@@ -91,7 +93,6 @@ function App() {
   // Resetea el tiempo de una tarea y recarga la página
   const handleReset = (id: number) => {
     resetTodoTime(id);
-    window.location.reload();
   };
 
   return (
@@ -183,6 +184,7 @@ function App() {
                 pause={todo.pausa}
                 onActualizar={(time) => handleActualizar(todo.id, time)}
                 onResetTime={() => handleReset(todo.id)}
+                timeReset={todo.timeReset}
               />
             )}
           </TodoList>

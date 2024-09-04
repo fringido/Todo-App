@@ -11,7 +11,9 @@ import RecetIcon from "../../Icons/RecetIcon";
 interface TodoItemProps {
   text: string; // El texto del ítem
   completed: boolean; // Estado de completado del ítem
-  time: { hours: number; minutes: number }; // Tiempo para la cuenta regresiva
+  time: { hours: number; minutes: number };
+    timeReset: { hours: number; minutes: number }; // Tiempo original para restablecer
+ // Tiempo para la cuenta regresiva
   pause: boolean; // Estado de pausa
   onComplete: () => void; // Función a ejecutar cuando se completa el ítem
   onDelete: () => void; // Función a ejecutar cuando se elimina el ítem
@@ -37,6 +39,10 @@ const TodoItem: React.FC<TodoItemProps> = (props) => {
     }
     setPause(!pause);
     props.onPause();
+  };
+  const onRecet = () => () => {
+    setRemainingTime(props.timeReset);
+    props.onResetTime();
   };
 
   useEffect(() => {
@@ -113,7 +119,7 @@ const TodoItem: React.FC<TodoItemProps> = (props) => {
             <PauseIcon className="icon-play" color="#fff" />
           )}
         </button>
-        <button onClick={props.onResetTime}>
+        <button onClick={onRecet()}>
           <RecetIcon className="icon-pause" height={"40px"} fill="#fff"/>
         </button>
       </div>
