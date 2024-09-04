@@ -17,7 +17,7 @@ interface TodoItemProps {
   onPause: () => void; // Función a ejecutar cuando se pausa el ítem
   onEdit: () => void;
   onActualizar: (time: { hours: number; minutes: number }) => void; // Función a ejecutar cuando se edita el ítem
-  
+  onResetTime : () => void;
 }
 
 // Define el componente TodoItem con la interfaz TodoItemProps
@@ -107,6 +107,7 @@ const TodoItem: React.FC<TodoItemProps> = (props) => {
           <PauseIcon className="icon-play" color="#fff" />
         )}
       </button>
+      <button onClick={props.onResetTime}>reset</button>
     </div>
   );
 };

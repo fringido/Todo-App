@@ -134,12 +134,11 @@ const handleActualizar = (id, time) => {
                 completed={todo.completed}
                 onComplete={() => completeTodo(todo.id)}
                 onDelete={() => deleteTodo(todo.id)}
-                onPause={() => {
-                  pauseTodo(todo.id);
-                }}
-                onEdit={() => handleEditTodo(todo)} // Agrega el manejador de edición
+                onPause={() => pauseTodo(todo.id)}
+                onEdit={() => handleEditTodo(todo)}
                 pause={todo.pausa}
-                onActualizar={(time) => handleActualizar(time, todo.id)}
+                onActualizar={(time) => handleActualizar(todo.id, time)}
+                onResetTime={() => handleResetTodoTime(todo.id)} // Añadir botón o llamada para resetear el tiempo
               />
             )}
           </TodoList>
