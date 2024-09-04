@@ -34,6 +34,7 @@ function App() {
     setOpenModal,
     deleteTodo,
     setSearchValue,
+    resetTodoTime,
     pauseTodo,
     setFilter,
     editTodo, // Añadimos la función para editar tareas
@@ -44,12 +45,12 @@ function App() {
     setOpenModal(true); // Abre el modal en modo edición
   };
 
-const handleActualizar = (id, time) => {
-  const todo = todos.find((todo) => todo.id === id);
-  if (todo) {
-    editTodo(id, todo.text, time);
-  }
-};
+  const handleActualizar = (id, time) => {
+    const todo = searchedTodos.find((todo) => todo.id === id); // Asegúrate de que estamos buscando en los todos actuales
+    if (todo) {
+      editTodo(id, todo.text, time); // Llama a editTodo con el tiempo actualizado
+    }
+  };
 
   const handleSaveTodo = (text, time) => {
     if (todoToEdit) {
@@ -60,6 +61,10 @@ const handleActualizar = (id, time) => {
     setTodoToEdit(null); // Resetea el estado de edición
     setOpenModal(false); // Cierra el modal
   };
+  const handleReset = (id) => {
+    resetTodoTime(id);
+    window.location.reload();
+  };
 
   return (
     <React.Fragment>
@@ -69,8 +74,17 @@ const handleActualizar = (id, time) => {
         loading={loading}
       />
       <button onClick={() => setVista(!vista)}>
-        <TabButton />
+        <TabButton vista={vista}/>
       </button>
+      {vista ? (
+        <CreateTodoButton
+          setOpenModal={() => {
+            setTodoToEdit(null); // Resetea la tarea a editar
+            setOpenModal(true);
+          }}
+        />
+      ) : null}
+
       {vista ? (
         <div>
           <Search
@@ -123,7 +137,9 @@ const handleActualizar = (id, time) => {
             onLoading={() => <TodosLoading />}
             onEmptyTodos={() => <EmptyTodos />}
             onEmptySearchResults={(searchText) => (
-              <p className="no_result">No hay resultados para {searchText}</p>
+              <p className="no_result">
+                No hay resultados para consulta {searchText}
+              </p>
             )}
           >
             {(todo) => (
@@ -138,7 +154,7 @@ const handleActualizar = (id, time) => {
                 onEdit={() => handleEditTodo(todo)}
                 pause={todo.pausa}
                 onActualizar={(time) => handleActualizar(todo.id, time)}
-                onResetTime={() => handleResetTodoTime(todo.id)} // Añadir botón o llamada para resetear el tiempo
+                onResetTime={() => handleReset(todo.id)} // Añadir botón o llamada para resetear el tiempo
               />
             )}
           </TodoList>
@@ -151,12 +167,6 @@ const handleActualizar = (id, time) => {
               editTodo={stateUpdaters.editTodo}
             />
           )}
-          <CreateTodoButton
-            setOpenModal={() => {
-              setTodoToEdit(null); // Resetea la tarea a editar
-              setOpenModal(true);
-            }}
-          />
         </div>
       ) : (
         <TodosLoading />

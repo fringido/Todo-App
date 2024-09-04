@@ -5,6 +5,7 @@ import "./TodoItem.css";
 import PlayIcon from "../../Icons/PlayIcon";
 import PauseIcon from "../../Icons/PauseIcon";
 import EditIcon from "../../Icons/EdithIcon";
+import RecetIcon from "../../Icons/RecetIcon";
 
 // Define la interfaz para las props del componente TodoItem
 interface TodoItemProps {
@@ -17,7 +18,7 @@ interface TodoItemProps {
   onPause: () => void; // Función a ejecutar cuando se pausa el ítem
   onEdit: () => void;
   onActualizar: (time: { hours: number; minutes: number }) => void; // Función a ejecutar cuando se edita el ítem
-  onResetTime : () => void;
+  onResetTime: () => void;
 }
 
 // Define el componente TodoItem con la interfaz TodoItemProps
@@ -38,8 +39,6 @@ const TodoItem: React.FC<TodoItemProps> = (props) => {
     props.onPause();
   };
 
- 
-
   useEffect(() => {
     if (!props.pause) {
       const timer = setInterval(() => {
@@ -57,7 +56,10 @@ const TodoItem: React.FC<TodoItemProps> = (props) => {
           } else {
             newTime.minutes -= 1;
           }
-          
+
+          // Actualiza el localStorage con el nuevo tiempo
+          props.onActualizar(newTime);
+
           return newTime;
         });
       }, 60000); // Intervalo de 1 minuto
@@ -99,15 +101,19 @@ const TodoItem: React.FC<TodoItemProps> = (props) => {
           ? `0${remainingTime.minutes}`
           : remainingTime.minutes}
       </span>
-      <button className="TodoItem-button" onClick={onPause}>
-        {!pause ||
-        (remainingTime.hours === 0 && remainingTime.minutes === 0) ? (
-          <PlayIcon className="icon-pause" color="#fff" />
-        ) : (
-          <PauseIcon className="icon-play" color="#fff" />
-        )}
-      </button>
-      <button onClick={props.onResetTime}>reset</button>
+      <div className="container-buttons">
+        <button className="TodoItem-button" onClick={onPause}>
+          {!pause ||
+          (remainingTime.hours === 0 && remainingTime.minutes === 0) ? (
+            <PlayIcon className="icon-pause" color="#fff" />
+          ) : (
+            <PauseIcon className="icon-play" color="#fff" />
+          )}
+        </button>
+        <button onClick={props.onResetTime}>
+          <RecetIcon className="icon-pause" height={"40px"} fill="#fff"/>
+        </button>
+      </div>
     </div>
   );
 };

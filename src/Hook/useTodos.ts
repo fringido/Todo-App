@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useLocalStorage } from './useLocalStorage';
 
 interface Todo {
@@ -52,29 +52,6 @@ function useTodos() {
     const completedTodos = todos.filter((todo) => !!todo.completed).length;
     const totalTodos = todos.length;
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            console.log('Actualizando localStorage cada minuto');
-            const newTodos = todos.map(todo => {
-                if (!todo.pausa) {
-                    // Aumenta el tiempo si no está en pausa
-                    let { hours, minutes } = todo.time;
-                    minutes += 1;
-                    if (minutes >= 60) {
-                        minutes = 0;
-                        hours += 1;
-                    }
-                    return { ...todo, time: { hours, minutes } };
-                }
-                return todo;
-            });
-            saveTodos(newTodos);
-        }, 60000); // 60000 ms = 1 minuto
-
-        // Cleanup on component unmount
-        return () => clearInterval(interval);
-    }, []);
-
     const applyFilters = (todos: Todo[]): Todo[] => {
         let filteredTodos = todos;
 
@@ -89,7 +66,8 @@ function useTodos() {
                 break;
             case 'medium':
                 filteredTodos = filteredTodos.filter(
-                    (todo) => (todo.time.hours === 0 && todo.time.minutes > 30 && todo.time.minutes <= 60) ||
+                    (todo) =>
+                        (todo.time.hours === 0 && todo.time.minutes > 30 && todo.time.minutes <= 60) ||
                         (todo.time.hours === 1 && todo.time.minutes === 0)
                 );
                 break;
@@ -181,9 +159,6 @@ function useTodos() {
             saveTodos(newTodos);
         }
     };
-
-    // Actualiza el localStorage cada minuto
-
 
     const state: UseTodosState = {
         loading,

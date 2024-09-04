@@ -13,7 +13,7 @@ const CreateTodoButton: React.FC<CreateTodoButtonProps> = ({
 
   return (
     <button className="add" onClick={onClickButton}>
-      Crear 
+      Crear task
     </button>
   );
 };

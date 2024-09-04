@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface State<T> {
     sincronizedItem: boolean;  // Indica si el item está sincronizado
@@ -52,7 +52,7 @@ function useLocalStorage<T>(itemName: string, initialValue: T) {
             type: actionTypes.sincronize,
         });
 
-    React.useEffect(() => {
+    useEffect(() => {
         setTimeout(() => {
             try {
                 const localStorageItem = localStorage.getItem(itemName);

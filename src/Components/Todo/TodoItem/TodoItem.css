@@ -29,6 +29,12 @@ button.TodoItem-button {
     border: none;
     cursor: pointer;
 }
+span.Icon-container.Icon-container--check {
+    cursor: pointer;
+}
+span.Icon-container.Icon-container--delete{
+    cursor: pointer;
+}
 
 svg.icon-pause {
     border-radius: 150px;
@@ -51,4 +57,13 @@ span.TodoItem-time {
     /* CONTAIN-INTRINSIC-BLOCK-SIZE: AUTO 100PX; */
     color    : #fff;
     font-size: xx-large;
+}
+
+.container-buttons {
+    display        : flex;
+    width          : 100%;
+    margin         : 10px 0;
+    flex-direction : row;
+    flex-wrap      : nowrap;
+    justify-content: space-evenly;
 }
