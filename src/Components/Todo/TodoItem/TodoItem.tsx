@@ -95,6 +95,9 @@ const TodoItem: React.FC<TodoItemProps> = (props) => {
         </p>
         <DeleteIcon onDelete={props.onDelete} />
       </li>
+      <div style={{color: '#fff'}}>
+        HH:MM
+      </div>
       <span className="TodoItem-time">
         {remainingTime.hours}:
         {remainingTime.minutes < 10

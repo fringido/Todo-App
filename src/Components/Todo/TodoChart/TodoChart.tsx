@@ -89,7 +89,7 @@ const TodoChart: React.FC<TodoChartProps> = ({ todos }) => {
   // Efecto para actualizar el gráfico solo cuando los datos cambian
   useEffect(() => {
     if (chartRef.current) {
-      const chartInstance = chartRef.current.chart; // Obtén la instancia del gráfico
+      const chartInstance = chartRef.current.getChart(); // Usamos el método `getChart` para obtener la instancia del gráfico
       if (chartInstance) {
         chartInstance.update(); // Actualiza el gráfico solo si los datos han cambiado
       }

@@ -13,9 +13,25 @@ import { TodoForm } from "./Components/Modal/Form/TodoForm";
 import { TabButton } from "./Components/Buttons/TabButton/TabButton";
 import TodoChart from "./Components/Todo/TodoChart/TodoChart";
 
+// Definición del tipo Todo
+interface Todo {
+  id: number;
+  text: string;
+  time: { hours: number; minutes: number };
+  completed: boolean;
+  pausa: boolean;
+}
+
 function App() {
+  // Estado para controlar la vista actual (lista de tareas o gráfico)
   const [vista, setVista] = React.useState(true);
-  const [todoToEdit, setTodoToEdit] = React.useState(null); // Tarea que se va a editar
+
+  // Estado para la tarea que se va a editar
+  const [todoToEdit, setTodoToEdit] = React.useState<Todo | undefined>(
+    undefined
+  );
+
+  // Hook personalizado para gestionar los todos
   const { state, stateUpdaters } = useTodos();
 
   const {
@@ -38,32 +54,42 @@ function App() {
     resetTodoTime,
     pauseTodo,
     setFilter,
-    editTodo, // Añadimos la función para editar tareas
+    editTodo,
   } = stateUpdaters;
 
-  const handleEditTodo = (todo) => {
-    setTodoToEdit(todo); // Establece la tarea que se va a editar
-    setOpenModal(true); // Abre el modal en modo edición
+  // Maneja la edición de una tarea
+  const handleEditTodo = (todo: Todo) => {
+    setTodoToEdit(todo);
+    setOpenModal(true);
   };
 
-  const handleActualizar = (id, time) => {
-    const todo = searchedTodos.find((todo) => todo.id === id); // Asegúrate de que estamos buscando en los todos actuales
+  // Actualiza el tiempo de una tarea existente
+  const handleActualizar = (
+    id: number,
+    time: { hours: number; minutes: number }
+  ) => {
+    const todo = searchedTodos.find((todo) => todo.id === id);
     if (todo) {
-      editTodo(id, todo.text, time); // Llama a editTodo con el tiempo actualizado
+      editTodo(id, todo.text, time);
     }
   };
 
-  const handleSaveTodo = (text, time) => {
+  // Guarda una nueva tarea o actualiza una tarea existente
+  const handleSaveTodo = (
+    text: string,
+    time: { hours: number; minutes: number }
+  ) => {
     if (todoToEdit) {
-      editTodo(todoToEdit.id, text, time); // Llama a editTodo con el nuevo texto y tiempo
+      editTodo(todoToEdit.id, text, time);
     } else {
-      addTodo(text, time); // Si no estamos editando, agrega una nueva tarea
+      addTodo(text, time);
     }
-    setTodoToEdit(null); // Resetea el estado de edición
-    setOpenModal(false); // Cierra el modal
+    setTodoToEdit(undefined); // Resetea la tarea a editar
+    setOpenModal(false);
   };
 
-  const handleReset = (id) => {
+  // Resetea el tiempo de una tarea y recarga la página
+  const handleReset = (id: number) => {
     resetTodoTime(id);
     window.location.reload();
   };
@@ -81,7 +107,7 @@ function App() {
       {vista ? (
         <CreateTodoButton
           setOpenModal={() => {
-            setTodoToEdit(null); // Resetea la tarea a editar
+            setTodoToEdit(undefined); // Resetea la tarea a editar
             setOpenModal(true);
           }}
         />
@@ -156,7 +182,7 @@ function App() {
                 onEdit={() => handleEditTodo(todo)}
                 pause={todo.pausa}
                 onActualizar={(time) => handleActualizar(todo.id, time)}
-                onResetTime={() => handleReset(todo.id)} // Añadir botón o llamada para resetear el tiempo
+                onResetTime={() => handleReset(todo.id)}
               />
             )}
           </TodoList>

@@ -1,17 +1,19 @@
 import React, { useEffect } from 'react';
-import { useLocalStorage } from './useLocalStorage';
-import { generarTareasAleatorias } from './useGenerateDate';
+import { useLocalStorage } from './useLocalStorage'; // Hook personalizado para manejo de Local Storage
+import { generarTareasAleatorias } from './useGenerateDate'; // Función para generar tareas aleatorias
 
-interface Todo {
+// Definición del tipo Todo
+export interface Todo {
     id: number;
     text: string;
     completed: boolean;
     time: { hours: number; minutes: number };
-    timeReset: { hours: number; minutes: number };
+    timeReset: { hours: number; minutes: number }; // Tiempo original para restablecer
     date: Date;
     pausa: boolean;
 }
 
+// Estado del hook useTodos
 interface UseTodosState {
     loading: boolean;
     error: boolean;
@@ -23,6 +25,7 @@ interface UseTodosState {
     filter: 'all' | 'completed' | 'short' | 'medium' | 'long'; // Filtros actualizados
 }
 
+// Actualizadores del estado del hook useTodos
 interface UseTodosStateUpdaters {
     setSearchValue: (value: string) => void;
     addTodo: (text: string, time: { hours: number; minutes: number }) => void;
@@ -38,6 +41,7 @@ interface UseTodosStateUpdaters {
 }
 
 function useTodos() {
+    // Hook personalizado para manejar el almacenamiento en local
     const {
         item: todos,
         saveItem: saveTodos,
@@ -46,20 +50,24 @@ function useTodos() {
         error,
     } = useLocalStorage<Todo[]>('TODOS_V1', []);
 
+    // Estados locales del hook
     const [searchValue, setSearchValue] = React.useState<string>('');
     const [openModal, setOpenModal] = React.useState<boolean>(false);
     const [filter, setFilter] = React.useState<'all' | 'completed' | 'short' | 'medium' | 'long'>('all');
 
+    // Calcular el número de tareas completadas y el total de tareas
     const completedTodos = todos.filter((todo) => !!todo.completed).length;
     const totalTodos = todos.length;
 
+    // Efecto para generar tareas aleatorias si no hay tareas en el almacenamiento
     useEffect(() => {
         if (todos.length === 0) {
             const tareasAleatorias = generarTareasAleatorias();
             saveTodos(tareasAleatorias);
         }
-    }, [todos, saveTodos]); // Ejecutar solo si todos cambia
+    }, [todos, saveTodos]); // Ejecuta solo cuando cambia 'todos'
 
+    // Aplica filtros y búsqueda a la lista de tareas
     const applyFilters = (todos: Todo[]): Todo[] => {
         let filteredTodos = todos;
 
@@ -84,27 +92,28 @@ function useTodos() {
                     (todo) => todo.time.hours > 1 || (todo.time.hours === 1 && todo.time.minutes > 0)
                 );
                 break;
-            case 'all': // Cambia esta lógica para mostrar solo tareas no completadas
+            case 'all': // Muestra todas las tareas, no solo las completadas
                 filteredTodos = filteredTodos.filter((todo) => !todo.completed);
                 break;
             default:
                 break;
         }
 
+        // Filtra por texto de búsqueda
         if (searchValue.length > 0) {
             filteredTodos = filteredTodos.filter((todo) =>
                 todo.text.toLowerCase().includes(searchValue.toLowerCase())
             );
         }
 
-     
-
         // Invertir el orden del array
         return filteredTodos.reverse();
     };
 
+    // Lista de tareas filtradas y buscadas
     const searchedTodos = applyFilters(todos);
 
+    // Función para agregar una nueva tarea
     const addTodo = (text: string, time: { hours: number; minutes: number }) => {
         const newTodos = [...todos];
         newTodos.push({
@@ -119,6 +128,7 @@ function useTodos() {
         saveTodos(newTodos);
     };
 
+    // Función para marcar una tarea como completada o no completada
     const completeTodo = (id: number) => {
         const todoIndex = todos.findIndex((todo) => todo.id === id);
         if (todoIndex !== -1) {
@@ -128,6 +138,7 @@ function useTodos() {
         }
     };
 
+    // Función para actualizar el tiempo de una tarea existente
     const actualizarTodo = (id: number, time: { hours: number; minutes: number }) => {
         const todoIndex = todos.findIndex((todo) => todo.id === id);
         if (todoIndex !== -1) {
@@ -137,6 +148,7 @@ function useTodos() {
         }
     };
 
+    // Función para restablecer el tiempo de una tarea al original
     const resetTodoTime = (id: number) => {
         const todoIndex = todos.findIndex((todo) => todo.id === id);
         if (todoIndex !== -1) {
@@ -147,6 +159,7 @@ function useTodos() {
         }
     };
 
+    // Función para eliminar una tarea
     const deleteTodo = (id: number) => {
         const todoIndex = todos.findIndex((todo) => todo.id === id);
         const newTodos = [...todos];
@@ -154,6 +167,7 @@ function useTodos() {
         saveTodos(newTodos);
     };
 
+    // Función para pausar o reanudar una tarea
     const pauseTodo = (id: number) => {
         const todoIndex = todos.findIndex((todo) => todo.id === id);
         const newTodos = [...todos];
@@ -161,6 +175,7 @@ function useTodos() {
         saveTodos(newTodos);
     };
 
+    // Función para editar una tarea existente
     const editTodo = (id: number, newText: string, newTime: { hours: number; minutes: number }) => {
         const todoIndex = todos.findIndex((todo) => todo.id === id);
         if (todoIndex !== -1) {
@@ -174,6 +189,7 @@ function useTodos() {
         }
     };
 
+    // Estado que se expone al componente que usa este hook
     const state: UseTodosState = {
         loading,
         error,
@@ -185,6 +201,7 @@ function useTodos() {
         filter,
     };
 
+    // Actualizadores del estado que se exponen al componente
     const stateUpdaters: UseTodosStateUpdaters = {
         setSearchValue,
         addTodo,
@@ -199,6 +216,7 @@ function useTodos() {
         resetTodoTime,
     };
 
+    // Retorna el estado y los actualizadores del estado
     return { state, stateUpdaters };
 }
 
