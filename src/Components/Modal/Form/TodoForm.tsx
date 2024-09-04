@@ -50,7 +50,6 @@ const TodoForm: React.FC<TodoFormProps> = ({
     event.preventDefault();
     if (todoToEdit && editTodo) {
       editTodo(todoToEdit.id, newTodoValue, time);
-        window.location.reload();
 
     } else {
       addTodo(newTodoValue, time);
