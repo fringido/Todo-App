@@ -199,7 +199,7 @@ function App() {
           )}
         </div>
       ) : (
-        <TodoChart todos={searchedTodos} />
+        <TodoChart />
       )}
     </React.Fragment>
   );

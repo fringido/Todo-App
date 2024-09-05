@@ -134,6 +134,12 @@ function useTodos() {
         if (todoIndex !== -1) {
             const newTodos = [...todos];
             newTodos[todoIndex].completed = !newTodos[todoIndex].completed;
+
+            // Si la tarea se completa, restablece el tiempo a 0
+            if (newTodos[todoIndex].completed) {
+                newTodos[todoIndex].time = { hours: 0, minutes: 0 };
+            }
+
             saveTodos(newTodos);
         }
     };
