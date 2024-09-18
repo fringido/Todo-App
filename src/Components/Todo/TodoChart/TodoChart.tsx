@@ -1,5 +1,6 @@
 import React, { useMemo, useRef, useEffect, useState } from "react";
 import { Chart } from "primereact/chart";
+import { TodosLoading } from "../TodoLoading/TodoLoading";
 
 interface Todo {
   id: number;
@@ -15,6 +16,9 @@ const TodoChart: React.FC = () => {
   const chartRef = useRef<Chart | null>(null);
   const prevTodosRef = useRef<Todo[]>([]);
 
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [loading, setLoading] = useState(true); // Estado para el loader
+
   const getTodosFromLocalStorage = (): Todo[] => {
     const todosString = localStorage.getItem("TODOS_V1");
 
@@ -29,8 +33,6 @@ const TodoChart: React.FC = () => {
     }
     return [];
   };
-
-  const [todos, setTodos] = useState<Todo[]>(getTodosFromLocalStorage());
 
   const areTodosEqual = (todos1: Todo[], todos2: Todo[]): boolean => {
     if (todos1.length !== todos2.length) return false;
@@ -51,9 +53,14 @@ const TodoChart: React.FC = () => {
     const interval = setInterval(() => {
       const newTodos = getTodosFromLocalStorage();
       if (!areTodosEqual(prevTodosRef.current, newTodos)) {
-        console.log("Todos changed");
+        setLoading(true); // Activa el loader cuando los todos cambian
         setTodos(newTodos);
         prevTodosRef.current = newTodos;
+
+        // Desactiva el loader después de 0.5 segundos
+        setTimeout(() => {
+          setLoading(false);
+        }, 300);
       }
     }, 1000); // Verifica cada segundo, puedes ajustar este tiempo según lo necesites
 
@@ -92,7 +99,7 @@ const TodoChart: React.FC = () => {
           data: datos,
           fill: false,
           borderColor: "#42A5F5",
-          tension: 0.8,
+          tension: 0.4,
         },
       ],
     };
@@ -105,7 +112,7 @@ const TodoChart: React.FC = () => {
       plugins: {
         legend: {
           labels: {
-            color: "#fff",
+            color: "#333",
           },
         },
       },
@@ -120,7 +127,7 @@ const TodoChart: React.FC = () => {
         },
         y: {
           ticks: {
-            color: "#fff",
+            color: "#666",
           },
           grid: {
             color: "#eee",
@@ -133,7 +140,11 @@ const TodoChart: React.FC = () => {
 
   return (
     <div >
-      <Chart ref={chartRef} type="line" data={data} options={options} />
+      {loading ? (
+        <TodosLoading/> // Loader simple
+      ) : (
+        <Chart ref={chartRef} type="line" data={data} options={options} />
+      )}
     </div>
   );
 };
