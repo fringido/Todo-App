@@ -1,75 +1,86 @@
-button{
+button {
     border: none;
 }
 
 .filters {
-    display        : flex;
-    flex-direction : row;
-    align-content  : center;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
     justify-content: flex-start;
-    gap            : 15px;
-    flex-wrap      : wrap;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 .tittle-filter {
     font-size: xx-large;
-    color    : #fff;
+    color: #fff;
     margin: 10px;
 }
 button.button-compleat {
     border-radius: 36px;
-    background   : #37b05b;
-    box-shadow   : 3px 2px 1px #213a29, -3px -1px 4px #006a20;
-    margin-top   : 10px;
-    color        : aliceblue;
-    font-size    : medium;
-    cursor       : pointer;
+    background: #354e41;
+
+    margin-top: 10px;
+    color: #74d9a0;
+    font-size: medium;
+    height: 43px;
+    font-weight: 800;
+
+    cursor: pointer;
 }
 
 button.button-long {
     border-radius: 36px;
-    background   : #b03737;
-    box-shadow   : 3px 2px 1px #3a2121, -3px -1px 4px #6a4500d4;
-    margin-top   : 10px;
-    color        : aliceblue;
-    font-size    : medium;
-    cursor       : pointer;
-    padding      : 10px;
+    background: #614441;
+
+    margin-top: 10px;
+    color: #ffb3b0;
+    font-size: medium;
+    cursor: pointer;
+    height: 43px;
+    font-weight: 800;
+
+    padding: 10px;
 }
 
 button.button-medium {
     border-radius: 36px;
-    background   : #b06737;
-    box-shadow   : 3px 2px 1px #3a2121, -3px -1px 4px #6a4500d4;
-    margin-top   : 10px;
-    color        : aliceblue;
-    font-size    : medium;
-    cursor       : pointer;
-    padding      : 10px;
+    background: #51412a;
+    color: #cfa254;
+
+    margin-top: 10px;
+    font-weight: 800;
+    font-size: medium;
+    height: 43px;
+    cursor: pointer;
+    padding: 10px;
 }
 
-button.button-short{
+button.button-short {
     border-radius: 36px;
-    background   : #a2b037;
-    box-shadow   : 3px 2px 1px #3a3821, -3px -1px 4px #536a00d4;
-    margin-top   : 10px;
-    color        : aliceblue;
-    font-size    : medium;
-    cursor       : pointer;
-    padding      : 10px;
+    background: #383f4f;
+    font-weight: 800;
+
+    margin-top: 10px;
+    color: #a9c8f8;
+    font-size: medium;
+    cursor: pointer;
+    height: 43px;
+    padding: 10px;
 }
 .button-compleat.active,
 .button-short.active,
 .button-long.active,
 .button-medium.active {
-    background-color: #d9e2e3;
-    /* Cambia el color de fondo */
-    color           : black;
+    background-color: #d9e2e3b0;
+    color: #000;
+    height: 43px;
+    font-weight: 800;
 }
 .no_result {
-    color    : #fff;
+    color: #fff;
     font-size: xx-large;
-} 
+}
 
-.card{
+.card {
     margin: 20px;
 }

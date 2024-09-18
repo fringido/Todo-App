@@ -51,6 +51,7 @@ const TodoChart: React.FC = () => {
     const interval = setInterval(() => {
       const newTodos = getTodosFromLocalStorage();
       if (!areTodosEqual(prevTodosRef.current, newTodos)) {
+        console.log("Todos changed");
         setTodos(newTodos);
         prevTodosRef.current = newTodos;
       }
@@ -91,44 +92,47 @@ const TodoChart: React.FC = () => {
           data: datos,
           fill: false,
           borderColor: "#42A5F5",
-          tension: 0.4,
+          tension: 0.8,
         },
       ],
     };
   }, [todos]);
 
-  const options = {
-    maintainAspectRatio: false,
-    aspectRatio: 0.6,
-    plugins: {
-      legend: {
-        labels: {
-          color: "#333",
+  const options = useMemo(
+    () => ({
+      maintainAspectRatio: false,
+      aspectRatio: 0.6,
+      plugins: {
+        legend: {
+          labels: {
+            color: "#fff",
+          },
         },
       },
-    },
-    scales: {
-      x: {
-        ticks: {
-          color: "#666",
+      scales: {
+        x: {
+          ticks: {
+            color: "#666",
+          },
+          grid: {
+            color: "#eee",
+          },
         },
-        grid: {
-          color: "#eee",
+        y: {
+          ticks: {
+            color: "#fff",
+          },
+          grid: {
+            color: "#eee",
+          },
         },
       },
-      y: {
-        ticks: {
-          color: "#666",
-        },
-        grid: {
-          color: "#eee",
-        },
-      },
-    },
-  };
+    }),
+    []
+  );
 
   return (
-    <div className="card">
+    <div >
       <Chart ref={chartRef} type="line" data={data} options={options} />
     </div>
   );
