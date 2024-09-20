@@ -106,6 +106,8 @@ function useTodos() {
             );
         }
 
+        
+
         // Invertir el orden del array
         return filteredTodos.reverse();
     };
